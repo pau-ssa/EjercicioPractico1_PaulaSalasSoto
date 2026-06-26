@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+    <head th:replace="general/fragmentos.html  :: head">
+        <title>GimnasioPepe</title>
+    </head>
+    <body>
+        <header th:replace="general/fragmentos :: header"/>
+        
+        <section>
+            <h2>Clase Yoga</h2>
+            <article>
+                <h3>YouTube</h3>
+                <iframe width="1236" 
+                        height="695" 
+                        src="https://www.youtube.com/watch?v=tnZ96Y2C28Y" title="YOGA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </article>
+        </section>
+        
+        <footer th:replace="general/fragmentos :: footer"/>
+    </body>
+</html>
