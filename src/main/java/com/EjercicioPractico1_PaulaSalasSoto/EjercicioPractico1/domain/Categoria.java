@@ -23,7 +23,7 @@ public class Categoria implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer idCategoria;
+    private Integer id;
 
     @Column(name = "nombre", unique = true, nullable = false, length = 100)
     @NotNull

@@ -27,7 +27,7 @@ public class Clase implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer idClase;
+    private Integer id;
 
     @Column(name = "nombre", unique = true, nullable = false, length = 100)
     @NotNull
@@ -40,7 +40,7 @@ public class Clase implements Serializable {
     private BigDecimal precio;
      
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
+    @JoinColumn(name = "id")
     private Categoria categoria;
      
 }

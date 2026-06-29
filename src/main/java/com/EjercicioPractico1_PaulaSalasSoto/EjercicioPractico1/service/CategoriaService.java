@@ -6,6 +6,8 @@ package com.EjercicioPractico1_PaulaSalasSoto.EjercicioPractico1.service;
 
 import com.EjercicioPractico1_PaulaSalasSoto.EjercicioPractico1.domain.Categoria;
 import com.EjercicioPractico1_PaulaSalasSoto.EjercicioPractico1.repository.CategoriaRepository;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -23,19 +25,37 @@ public class CategoriaService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Categoria> getCategoria(Integer idCategoria) {
-        return categoriaRepository.findById(idCategoria);
+    public Optional<Categoria> getCategoria(Integer id) {
+        return categoriaRepository.findById(id);
     }
 
+     @Transactional(readOnly = true)
+    public List<Categoria> getCategoriasLista(Integer id) {
+        if (id == null) {
+            return categoriaRepository.findAll();
+        }
+        List<Categoria> lista = new ArrayList<>();
+        categoriaRepository.findById(id).ifPresent(lista::add);
+        return lista;
+    }
+    
+    
+     @Transactional
+    public void save(Categoria categoria) {
+        categoria = categoriaRepository.save(categoria);
+                categoriaRepository.save(categoria);
+           
+        }
+    
     @Transactional
-    public void delete(Integer idCategoria) {
+    public void delete(Integer id) {
         // Verifica si la categoría existe antes de intentar eliminarlo
-        if (!categoriaRepository.existsById(idCategoria)) {
+        if (!categoriaRepository.existsById(id)) {
             // Lanza una excepción para indicar que el usuario no fue encontrado
-            throw new IllegalArgumentException("La categoría con ID " + idCategoria + " no existe.");
+            throw new IllegalArgumentException("La categoría con ID " + id + " no existe.");
         }
         try {
-            categoriaRepository.deleteById(idCategoria);
+            categoriaRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             // Lanza una nueva excepción para encapsular el problema de integridad de datos
             throw new IllegalStateException("No se puede eliminar la categoria. Tiene datos asociados.", e);
