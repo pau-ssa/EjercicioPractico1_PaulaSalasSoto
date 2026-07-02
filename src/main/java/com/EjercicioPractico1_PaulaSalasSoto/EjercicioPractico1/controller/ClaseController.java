@@ -1,6 +1,8 @@
 package com.EjercicioPractico1_PaulaSalasSoto.EjercicioPractico1.controller;
 
+import com.EjercicioPractico1_PaulaSalasSoto.EjercicioPractico1.domain.Categoria;
 import com.EjercicioPractico1_PaulaSalasSoto.EjercicioPractico1.domain.Clase;
+import com.EjercicioPractico1_PaulaSalasSoto.EjercicioPractico1.service.CategoriaService;
 import com.EjercicioPractico1_PaulaSalasSoto.EjercicioPractico1.service.ClaseService;
 import jakarta.validation.Valid;
 import java.util.Locale;
@@ -23,19 +25,23 @@ public class ClaseController {
     // El servicio es final para asegurar la inmutabilidad
     private final ClaseService claseService;
     private final MessageSource messageSource;
-
+    private final CategoriaService categoriaService;
 
     // Inyección por constructor (No requiere @Autowired en Spring moderno)
-    public ClaseController(ClaseService claseService, MessageSource messageSource) {
+    public ClaseController(ClaseService claseService, MessageSource messageSource, CategoriaService categoriaService) {
         this.claseService = claseService;
         this.messageSource = messageSource;
+        this.categoriaService = categoriaService;
     }
 
     @GetMapping("/listado")
     public String inicio(@RequestParam(name="id", required=false) Integer id, Model model) { 
         List<Clase> clases = claseService.getClasesLista(id);
         model.addAttribute("clases", clases);
-        model.addAttribute("totalCategorias", clases.size());  
+        model.addAttribute("totalClases", clases.size());
+        List<Categoria> categorias = categoriaService.getCategoriasLista(null);
+        model.addAttribute("categorias", categorias);
+        model.addAttribute("clase", new Clase());
         return "/clase/listado";
     }
     
@@ -56,16 +62,16 @@ public class ClaseController {
             claseService.delete(id);
         } catch (IllegalArgumentException e) {
             titulo = "error"; // Captura la excepción de argumento inválido para el mensaje de "no existe"
-            detalle = "categoria.error01";
+            detalle = "clase.error01";
         } catch (IllegalStateException e) {
             titulo = "error"; // Captura la excepción de estado ilegal para el mensaje de "datos asociados"
-            detalle = "categoria.error02";
+            detalle = "clase.error02";
         } catch (Exception e) {
             titulo = "error";  // Captura cualquier otra excepción inesperada
-            detalle = "categoria.error03";
+            detalle = "clase.error03";
         }
         redirectAttributes.addFlashAttribute(titulo, messageSource.getMessage(detalle, null, Locale.getDefault()));
-        return "redirect:/categoria/listado";
+        return "redirect:/clase/listado";
     }
 
    @GetMapping("/editar/{id}")
@@ -76,7 +82,12 @@ public class ClaseController {
             return "redirect:/clase/listado";
         }
         model.addAttribute("clase", claseOpt.get());
+        model.addAttribute("categorias", categoriaService.getCategoriasLista(null));
         return "/clase/modifica";
     }
-
+    
+    @GetMapping("/contacto")
+    public String mostrarContacto() {
+        return "contacto/listado"; 
+    }
 }

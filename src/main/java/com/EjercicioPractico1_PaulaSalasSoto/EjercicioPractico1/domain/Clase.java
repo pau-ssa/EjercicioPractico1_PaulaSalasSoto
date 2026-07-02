@@ -15,6 +15,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -28,19 +30,22 @@ public class Clase implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+    
 
-    @Column(name = "nombre", unique = true, nullable = false, length = 100)
+    @Column(name = "nombre", nullable = false, length = 100)
     @NotNull
     @Size(max = 100)
     private String nombre;
     
-     @NotNull
+    @NotNull
     @Digits(integer = 6, fraction = 2)
     @Column(name = "precio", nullable = false, precision = 8, scale = 2)
     private BigDecimal precio;
      
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "categoria_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Categoria categoria;
      
 }

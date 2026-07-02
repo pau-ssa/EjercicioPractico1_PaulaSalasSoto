@@ -29,12 +29,22 @@
                               class='was-validated' enctype="multipart/form-data" method="post">
                             <div class="modal-body">
                                 <div class='mb-3'>
-                                    <label>[[#{clase.nombre}]]</label>
-                                    <input type="text" name='nombre' class='form-control' required="true"/></div>
+                                    <label for="nombre" class="form-label"> [[#{clase.nombre}]]</label>
+                                    <input type="text" th:field="*{nombre}" id='nombre' class='form-control' required="true"/></div>
                                 <div class='mb-3'>
-                                    <label>[[#{clase.precio}]]</label>
-                                    <input type="BigDecimal" name='precio' class='form-control' required="true"/></div>
-                               
+                                    <label for="precio" class="form-label">[[#{clase.precio}]]</label>
+                                    <input type="number" step="0.01" th:field="*{precio}" id='precio' class='form-control' required="true"/></div>
+                                <div class='mb-3'>
+                                    <label for="categoria" class="form-label">[[#{clase.categoria}]]</label>
+                                    <select th:field="*{categoria}" class="form-select" id="categoria" aria-label="Default select example" required="true">
+                                        <option th:each="s : ${categorias}" 
+                                                th:value="${s.id}"
+                                                th:text="${s.nombre}">
+                                            [[${s.nombre}]]
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                     <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]</button>
@@ -47,7 +57,7 @@
             </div>
         </section>
 
-        <!-- fragmento 2 para el listado de suculentas -->
+        <!-- fragmento 2 para el listado de clases -->
         <section th:fragment="listado" class="p-3">
             <div class="row p-3">
                 <div class="col-md-9">
@@ -59,6 +69,7 @@
                                     <thead><tr><th>#</th>
                                             <th>[[#{clase.nombre}]]</th>
                                             <th>[[#{clase.precio}]]</th>
+                                            <th>[[#{clase.categoria}]]</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -66,7 +77,10 @@
                                         <tr th:each="c : ${clases}">
                                             <td>[[${c.id}]]</td>
                                             <td>[[${c.nombre}]]</td>
-                                            <td>[[${c.precio}]]</td> 
+                                            <td class="text-end">[[${#numbers.formatCurrency(c.precio)}]]</td>
+                                            <!--<td>[[${c.precio}]]</td> -->
+                                            <!--<td>[[${c.categoria}]]</td> -->
+                                            <td>[[${c.categoria.nombre}]]</td>
                                             <td>
                                                 <button type="button" class="btn btn-danger"
                                                         data-bs-toggle="modal" data-bs-target="#confirmModal"
@@ -89,7 +103,7 @@
                 <div class="col-md-3">
                     <div class="card text-center bg-success text-white mb-3">
                         <div class="card-body"><h3>[[#{clase.total}]]</h3>
-                            <h4 class="fs-2"><i class="fas fa-layer-group"></i> [[${totalClaes}]]</h4>
+                            <h4 class="fs-2"><i class="fas fa-layer-group"></i> [[${totalClases}]]</h4>
                         </div></div>
                 </div>
             </div>
@@ -103,7 +117,6 @@
                     <form method="POST" th:action="@{/clase/guardar}" 
                           th:object="${clase}" class="was-validated" enctype="multipart/form-data">
                         <input type="hidden" name="id" th:field="*{id}"/>
-                        <input type="hidden" name="precio" th:field="*{precio}"/>
                         <div class="row py-4 mb-4 bg-light">
                             <div class="col-md-4 d-grid">
                                 <a th:href="@{/clase/listado}" class="btn btn-primary">
@@ -119,20 +132,39 @@
                                 <div class="card">
                                     <div class="card-header"><h4>[[#{accion.actualizar}]]</h4></div>
                                     <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="nombre">[[#{clase.nombre}]]</label>
-                                            <input type="text" class="form-control" name="nombre" 
-                                                   th:field="*{nombre}" required="true"/>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="precio">[[#{clase.precio}]]</label>
-                                            <input type="BigDecimal" class="form-control" name="precio" 
-                                                   th:field="*{precio}" required="true"/>
+                                        <div class="row">
+                                            <div class="mb-3 col-md-12">
+                                                <label for="nombre" class="form-label">[[#{clase.nombre}]]</label>
+                                                <input type="text" 
+                                                       class="form-control" 
+                                                       th:field="*{nombre}" 
+                                                       id="nombre" 
+                                                       required="true"/>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label for="precio" class="form-label">[[#{clase.precio}]]</label>
+                                                <input type="number" 
+                                                       step="0.01" 
+                                                       class="form-control" 
+                                                       th:field="*{precio}" 
+                                                       id="precio" 
+                                                       required="true"/>
+                                            </div>
+                                        <div class='mb-3'>
+                                            <label for= "categoria">[[#{clase.categoria}]]</label>
+                                            <select th:field ="*{categoria}"   
+                                                    class="form-select" required ="true"
+                                                    aria-label="Default select example">
+                                                <option th:each="s : ${categorias}" 
+                                                        th:value="${s.id}"
+                                                        th:text="${s.nombre}">
+                                                    [[${s.nombre}]]
+                                                </option>
+                                            </select> 
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -147,8 +179,8 @@
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered custom-modal-animation">
                     <div class="modal-content animate-slide-up">
-                        <form th:action="@{/clase/eliminar}" th:object="${clase}" method="post">
-                            <input type="hidden" name="id" id="modalId"/>
+                        <form th:action="@{/clase/eliminar}" th:object="${clase}" method="POST">
+                            <input type="hidden" name="id" id="modalId" th:value="${c.id}"/>
                             <div class="modal-header bg-warning text-white">
                                 <h5 class="modal-title" id="modalLabel">
                                     <i class="fa-solid fa-circle-radiation"></i> [[#{accion.confirmar}]]
