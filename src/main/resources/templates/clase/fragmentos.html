@@ -180,7 +180,7 @@
                 <div class="modal-dialog modal-dialog-centered custom-modal-animation">
                     <div class="modal-content animate-slide-up">
                         <form th:action="@{/clase/eliminar}" th:object="${clase}" method="POST">
-                            <input type="hidden" name="id" id="modalId" th:value="${c.id}"/>
+                            <input type="hidden" name="id" id="modalId" th:value="${clase.id}"/>
                             <div class="modal-header bg-warning text-white">
                                 <h5 class="modal-title" id="modalLabel">
                                     <i class="fa-solid fa-circle-radiation"></i> [[#{accion.confirmar}]]
